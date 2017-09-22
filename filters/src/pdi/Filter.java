@@ -3,6 +3,7 @@ package pdi;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+import java.util.LinkedList;
 
 public class Filter {
 
@@ -379,6 +380,8 @@ public class Filter {
         int width = img.getWidth();
         int height = img.getHeight();
         Color newColor = null;
+	AlphaComposite alpha =
+	    AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.2F);
 
         for (int i = 0; i < width; i++)
             for (int j = 0; j < height; j++) {
@@ -407,6 +410,59 @@ public class Filter {
             }
     }
 
+    /**
+     * Quita una marca de agua específica a una imagen.
+     * @param img la imagen
+     */
+    public static void waterMark(BufferedImage img) {
+
+        int width = img.getWidth();
+        int height = img.getHeight();
+        Color newColor = null;
+	// Valor redondeado encontrado 'a ojo' de la marca de agua
+	int[] rgb = {235, 175, 185};
+	int c = 0;
+
+        for (int row = 0; row < height; row++)
+            for (int col = 0; col < width; col++) {
+                int red = getImageColor(img, col, row, RED);
+                int green = getImageColor(img, col, row, GREEN);
+                int blue = getImageColor(img, col, row, BLUE);
+
+		/* Si la diferencia entre r,g y r,b es considerablemente mayor,
+		 * podemos considerar que es la marca de agua.
+		 */
+		if(red > green + 15 && red > blue + 15){
+
+		    /* Obtenemos la diferencia entre la marca de agua y 
+		     * el pixel actual
+		     */
+		    int diffR = rgb[0] - red;
+		    int diffG = rgb[1] - green;
+		    int diffB = rgb[2] - blue;
+
+		    // obtenemos el promedio
+		    int avg = fixColor((diffR + diffG + diffB) / 3);
+
+		    /* Si el promedio es considerablemente menor, el original
+		     * es un blanco. Si es considerablemente mayor, es un negro.
+		     * Y si está entre esos dos valores, obtenemos un gris.
+		     */
+		    if(avg < 25)
+			red = green = blue = 255;
+		    else if(avg > 103)
+			red = green = blue = 0;
+		    else
+			red = green = blue = (red + green + blue) /3;
+		}		 
+		newColor = new Color(red, green, blue);
+		
+		img.setRGB(col, row, newColor.getRGB());
+            }
+	
+    }
+    
+    
     /**
      * Obtiene el r, g o b de una imagen.
      * @param img la imagen

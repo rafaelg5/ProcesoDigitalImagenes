@@ -104,7 +104,7 @@ public class FXMLDocumentController implements Initializable {
                 alert.setTitle("Advertencia");
                 alert.setHeaderText("");
                 alert.setContentText("Problema al cargar la imagen. "
-                        + "Intente de nuevo.");
+				     + "Intente de nuevo.");
 
                 alert.showAndWait();
             } else {
@@ -131,7 +131,7 @@ public class FXMLDocumentController implements Initializable {
             alert.setTitle("Advertencia");
             alert.setHeaderText("");
             alert.setContentText("Seleccione primero la opción Cargar Imagen y "
-                    + "aplique un filtro.");
+				 + "aplique un filtro.");
 
             alert.showAndWait();
             return;
@@ -144,7 +144,7 @@ public class FXMLDocumentController implements Initializable {
         if (file != null) {
             try {
                 ImageIO.write(SwingFXUtils.fromFXImage(filteredImage.getImage(),
-                        null), "png", file);
+						       null), "png", file);
             } catch (IOException ex) {
             }
         }
@@ -158,7 +158,7 @@ public class FXMLDocumentController implements Initializable {
             alert.setTitle("Advertencia");
             alert.setHeaderText("");
             alert.setContentText("Seleccione primero la opción Cargar Imagen y "
-                    + "agregue una imagen.");
+				 + "agregue una imagen.");
 
             alert.showAndWait();
         } else {
@@ -168,47 +168,48 @@ public class FXMLDocumentController implements Initializable {
             choose.setHeaderText("");
             choose.setContentText("");
             ObservableList<String> options
-                    = FXCollections.observableArrayList(
-                            "Tonos de gris",
-                            "Rojo",
-                            "Verde",
-                            "Azul",
-                            "Brillo",
-                            "Aleatorio",
-                            "Alto Contraste",
-                            "Mosaico",
-                            "Blur",
-                            "Motion Blur",
-                            "Encontrar Bordes",
-                            "Sharpen",
-                            "Emboss",
-                            "Inverso",
-                            "Micas de Color"
-                    );
+		= FXCollections.observableArrayList(
+						    "Tonos de gris",
+						    "Rojo",
+						    "Verde",
+						    "Azul",
+						    "Brillo",
+						    "Aleatorio",
+						    "Alto Contraste",
+						    "Mosaico",
+						    "Blur",
+						    "Motion Blur",
+						    "Encontrar Bordes",
+						    "Sharpen",
+						    "Emboss",
+						    "Inverso",
+						    "Micas de Color",
+						    "Marca de Agua"
+						    );
             final ComboBox<String> comboBox =
 		new ComboBox<String>(options);
             comboBox.getSelectionModel().selectFirst();
             choose.setGraphic(comboBox);
 
             choose.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    brightnessSlider.setVisible(false);
-                    mosaicW.setVisible(false);
-                    mosaicH.setVisible(false);
-                    mosaicSend.setVisible(false);
-                    label1.setVisible(false);
-                    colorR.setVisible(false);
-                    colorG.setVisible(false);
-                    colorB.setVisible(false);
-                    label2.setVisible(false);
-                    label3.setVisible(false);
-                    label4.setVisible(false);
+		    if (response == ButtonType.OK) {
+			brightnessSlider.setVisible(false);
+			mosaicW.setVisible(false);
+			mosaicH.setVisible(false);
+			mosaicSend.setVisible(false);
+			label1.setVisible(false);
+			colorR.setVisible(false);
+			colorG.setVisible(false);
+			colorB.setVisible(false);
+			label2.setVisible(false);
+			label3.setVisible(false);
+			label4.setVisible(false);
 
-                    String option = comboBox.getSelectionModel().getSelectedItem().toString();
+			String option = comboBox.getSelectionModel().getSelectedItem().toString();
 
-                    BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
-                            null);
-                    switch (option) {
+			BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
+								       null);
+			switch (option) {
                         case "Tonos de gris":
                             Filter.grayScaleFilter(image);
                             break;
@@ -263,7 +264,7 @@ public class FXMLDocumentController implements Initializable {
                         case "Inverso":
                             Filter.inverse(image);
                             break;
-                        case "Micas de Color":
+			case "Micas de Color":
                             colorR.setVisible(true);
                             colorG.setVisible(true);
                             colorB.setVisible(true);
@@ -276,13 +277,16 @@ public class FXMLDocumentController implements Initializable {
                             }
                             saveImage.setVisible(false);
                             return;
-                    }
+			case "Marca de Agua":
+			    Filter.waterMark(image);
+			    break;
+			}
 
-                    Image filtered = SwingFXUtils.toFXImage(image, null);
-                    filteredImage.setImage(filtered);
-                    saveImage.setVisible(true);
-                }
-            });
+			Image filtered = SwingFXUtils.toFXImage(image, null);
+			filteredImage.setImage(filtered);
+			saveImage.setVisible(true);
+		    }
+		});
         }
     }
 
@@ -290,7 +294,7 @@ public class FXMLDocumentController implements Initializable {
     private void handleMosaicSend(ActionEvent event) {
         saveImage.setVisible(false);
         BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
-                null);
+						       null);
 
         if (mosaicW.isVisible()) {
 
@@ -309,7 +313,7 @@ public class FXMLDocumentController implements Initializable {
         } else if (colorR.isVisible()) {
 
             if (!isNumeric(colorR.getText()) || !isNumeric(colorG.getText())
-                    || !isNumeric(colorB.getText())) {
+		|| !isNumeric(colorB.getText())) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Advertencia");
                 alert.setHeaderText("");
@@ -352,21 +356,21 @@ public class FXMLDocumentController implements Initializable {
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
         brightnessSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                    Number oldValue, Number newValue) {
+		@Override
+		public void changed(ObservableValue<? extends Number> observable,
+				    Number oldValue, Number newValue) {
 
-                BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
-                        null);
+		    BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
+								   null);
 
-                Filter.brightnessFilter(image,
-                        brightnessSlider.valueProperty().getValue().intValue());
+		    Filter.brightnessFilter(image,
+					    brightnessSlider.valueProperty().getValue().intValue());
 
-                Image filtered = SwingFXUtils.toFXImage(image, null);
-                filteredImage.setImage(filtered);
-                saveImage.setVisible(true);
-            }
-        });
+		    Image filtered = SwingFXUtils.toFXImage(image, null);
+		    filteredImage.setImage(filtered);
+		    saveImage.setVisible(true);
+		}
+	    });
     }
 
 }
