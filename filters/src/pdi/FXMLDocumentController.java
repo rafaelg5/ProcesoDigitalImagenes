@@ -7,8 +7,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,58 +24,71 @@ import javax.imageio.ImageIO;
 public class FXMLDocumentController implements Initializable {
 
     @FXML
-    private Button chooseButton;
-
+    private MenuItem loadImage;
+    @FXML
+    private MenuItem saveImage;
+    @FXML
+    private MenuItem grayScaleF;
+    @FXML
+    private MenuItem redF;
+    @FXML
+    private MenuItem greenF;
+    @FXML
+    private MenuItem blueF;
+    @FXML
+    private MenuItem randomF;    
+    @FXML
+    private MenuItem brightnessF;
+    @FXML
+    private MenuItem highContrastF;  
+    @FXML
+    private MenuItem mosaicF;  
+    @FXML
+    private MenuItem blurF;  
+    @FXML
+    private MenuItem mblurF;  
+    @FXML
+    private MenuItem findEdgesF;  
+    @FXML
+    private MenuItem sharpenF;  
+    @FXML
+    private MenuItem embossF; 
+    @FXML
+    private MenuItem inverseF;
+    @FXML
+    private MenuItem andyWF;
+    @FXML
+    private MenuItem customWatermarkF;
     @FXML
     private ImageView originalImage;
-
-    @FXML
-    private Button filterButton;
-
     @FXML
     private ImageView filteredImage;
-
     @FXML
     private Slider brightnessSlider;
-
     @FXML
     private TextField mosaicW;
-
     @FXML
     private TextField mosaicH;
-
     @FXML
     private TextField colorR;
-
     @FXML
     private TextField colorG;
-
     @FXML
     private TextField colorB;
-
     @FXML
     private Label label1;
-
     @FXML
     private Label label2;
-
     @FXML
     private Label label3;
-
     @FXML
     private Label label4;
-
     @FXML
     private Button mosaicSend;
-
-    @FXML
-    private Button saveImage;
-
     private final FileChooser fileChooser = new FileChooser();
 
     @FXML
-    private void handleChooseButton(ActionEvent event) throws IOException {
-
+    private void handleLoadImage(ActionEvent event) throws IOException {
         brightnessSlider.setVisible(false);
         mosaicW.setVisible(false);
         mosaicH.setVisible(false);
@@ -90,7 +101,8 @@ public class FXMLDocumentController implements Initializable {
         label3.setVisible(false);
         label4.setVisible(false);
 
-        File file = fileChooser.showOpenDialog(chooseButton.getScene().getWindow());
+        File file
+                = fileChooser.showOpenDialog(originalImage.getScene().getWindow());
 
         if (file != null) {
 
@@ -98,17 +110,17 @@ public class FXMLDocumentController implements Initializable {
             String ext = fileName.substring(fileName.length() - 4);
 
             boolean matches = ext.matches(".jpg|.gif|jpeg|.png|.svg");
-            
+
             if (!matches) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Advertencia");
                 alert.setHeaderText("");
                 alert.setContentText("Problema al cargar la imagen. "
-				     + "Intente de nuevo.");
+                        + "Intente de nuevo.");
 
                 alert.showAndWait();
             } else {
-                
+
                 /* Esta opción no funciona afuera de Netbeans:
                  * Image image = new Image(file.toURI().toString());
                  */
@@ -124,177 +136,223 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void handleSaveButton(ActionEvent event) {
+    private void handleSaveImage(ActionEvent event) {
 
         if (filteredImage.getImage() == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Advertencia");
             alert.setHeaderText("");
             alert.setContentText("Seleccione primero la opción Cargar Imagen y "
-				 + "aplique un filtro.");
+                    + "aplique un filtro.");
 
             alert.showAndWait();
             return;
         }
 
         FileChooser fc = new FileChooser();
-        fc.setTitle("Guardar Image");
+        fc.setTitle("Guardar Imagen");
 
-        File file = fc.showSaveDialog(saveImage.getScene().getWindow());
+        File file = fc.showSaveDialog(filteredImage.getScene().getWindow());
         if (file != null) {
             try {
                 ImageIO.write(SwingFXUtils.fromFXImage(filteredImage.getImage(),
-						       null), "png", file);
+                        null), "png", file);
             } catch (IOException ex) {
             }
         }
     }
 
     @FXML
-    private void handleFilterButton(ActionEvent event) {
+    private void handleGrayScale(ActionEvent event) {
+        handleFilters(grayScaleF.getText());        
+    }
+    
+    @FXML
+    private void handleRed(ActionEvent event) {
+        handleFilters(redF.getText());
+    }
+    
+    @FXML
+    private void handleGreen(ActionEvent event) {
+        handleFilters(greenF.getText());
+    }
+    
+    @FXML
+    private void handleBlue(ActionEvent event) {
+        handleFilters(blueF.getText());
+    }
+    
+    @FXML
+    private void handleRandom(ActionEvent event) {
+        handleFilters(randomF.getText());
+    }
+    
+    @FXML
+    private void handleBrightness(ActionEvent event) {
+        handleFilters(brightnessF.getText());
+    }
+    
+    @FXML
+    private void handleHC(ActionEvent event) {
+        handleFilters(highContrastF.getText());
+    }
+    
+    @FXML
+    private void handleMosaic(ActionEvent event) {
+        handleFilters(mosaicF.getText());
+    }
+    
+    @FXML
+    private void handleBlur(ActionEvent event) {
+        handleFilters(blurF.getText());
+    }
+    
+    @FXML
+    private void handleMBlur(ActionEvent event) {
+        handleFilters(mblurF.getText());
+    }
+    
+    @FXML
+    private void handleFindEdges(ActionEvent event) {
+        handleFilters(findEdgesF.getText());    
+    }
+    
+    @FXML
+    private void handleSharpen(ActionEvent event) {
+        handleFilters(sharpenF.getText());
+    }
+    
+    @FXML
+    private void handleEmboss(ActionEvent event) {
+        handleFilters(embossF.getText());
+    }
+    
+    @FXML
+    private void handleInverse(ActionEvent event) {
+        handleFilters(inverseF.getText());
+    }
+    
+    @FXML
+    private void handleAndyWarhol(ActionEvent event) {
+        handleFilters(andyWF.getText());
+    }
+    
+    @FXML
+    private void handleWM(ActionEvent event) {
+        handleFilters(customWatermarkF.getText());
+    }
+    
+    private void handleFilters(String filterName) {
 
         if (originalImage.getImage() == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Advertencia");
             alert.setHeaderText("");
             alert.setContentText("Seleccione primero la opción Cargar Imagen y "
-				 + "agregue una imagen.");
+                    + "agregue una imagen.");
 
             alert.showAndWait();
-        } else {
-
-            Alert choose = new Alert(Alert.AlertType.CONFIRMATION);
-            choose.setTitle("Seleccionar filtro");
-            choose.setHeaderText("");
-            choose.setContentText("");
-            ObservableList<String> options
-		= FXCollections.observableArrayList(
-						    "Tonos de gris",
-						    "Rojo",
-						    "Verde",
-						    "Azul",
-						    "Brillo",
-						    "Aleatorio",
-						    "Alto Contraste",
-						    "Mosaico",
-						    "Blur",
-						    "Motion Blur",
-						    "Encontrar Bordes",
-						    "Sharpen",
-						    "Emboss",
-						    "Inverso",
-						    "Micas de Color",
-						    "Marca de Agua"
-						    );
-            final ComboBox<String> comboBox =
-		new ComboBox<String>(options);
-            comboBox.getSelectionModel().selectFirst();
-            choose.setGraphic(comboBox);
-
-            choose.showAndWait().ifPresent(response -> {
-		    if (response == ButtonType.OK) {
-			brightnessSlider.setVisible(false);
-			mosaicW.setVisible(false);
-			mosaicH.setVisible(false);
-			mosaicSend.setVisible(false);
-			label1.setVisible(false);
-			colorR.setVisible(false);
-			colorG.setVisible(false);
-			colorB.setVisible(false);
-			label2.setVisible(false);
-			label3.setVisible(false);
-			label4.setVisible(false);
-
-			String option = comboBox.getSelectionModel().getSelectedItem().toString();
-
-			BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
-								       null);
-			switch (option) {
-                        case "Tonos de gris":
-                            Filter.grayScaleFilter(image);
-                            break;
-                        case "Rojo":
-                            Filter.redFilter(image);
-                            break;
-                        case "Verde":
-                            Filter.greenFilter(image);
-                            break;
-                        case "Azul":
-                            Filter.blueFilter(image);
-                            break;
-                        case "Aleatorio":
-                            Filter.randomFilter(image);
-                            break;
-                        case "Brillo":
-                            brightnessSlider.setVisible(true);
-                            brightnessSlider.setValue(0);
-                            if (filteredImage.getImage() != null) {
-                                filteredImage.setImage(null);
-                            }
-                            saveImage.setVisible(false);
-                            return;
-                        case "Alto Contraste":
-                            Filter.highContrast(image);
-                            break;
-                        case "Mosaico":
-                            mosaicW.setVisible(true);
-                            mosaicH.setVisible(true);
-                            mosaicSend.setVisible(true);
-                            label1.setVisible(true);
-                            if (filteredImage.getImage() != null) {
-                                filteredImage.setImage(null);
-                            }
-                            saveImage.setVisible(false);
-                            return;
-                        case "Blur":
-                            Filter.blur(image);
-                            break;
-                        case "Motion Blur":
-                            Filter.motionBlur(image);
-                            break;
-                        case "Encontrar Bordes":
-                            Filter.findEdges(image);
-                            break;
-                        case "Sharpen":
-                            Filter.sharpen(image);
-                            break;
-                        case "Emboss":
-                            Filter.emboss(image);
-                            break;
-                        case "Inverso":
-                            Filter.inverse(image);
-                            break;
-			case "Micas de Color":
-                            colorR.setVisible(true);
-                            colorG.setVisible(true);
-                            colorB.setVisible(true);
-                            mosaicSend.setVisible(true);
-                            label2.setVisible(true);
-                            label3.setVisible(true);
-                            label4.setVisible(true);
-                            if (filteredImage.getImage() != null) {
-                                filteredImage.setImage(null);
-                            }
-                            saveImage.setVisible(false);
-                            return;
-			case "Marca de Agua":
-			    Filter.waterMark(image);
-			    break;
-			}
-
-			Image filtered = SwingFXUtils.toFXImage(image, null);
-			filteredImage.setImage(filtered);
-			saveImage.setVisible(true);
-		    }
-		});
+            return;
         }
+        brightnessSlider.setVisible(false);
+        mosaicW.setVisible(false);
+        mosaicH.setVisible(false);
+        mosaicSend.setVisible(false);
+        label1.setVisible(false);
+        colorR.setVisible(false);
+        colorG.setVisible(false);
+        colorB.setVisible(false);
+        label2.setVisible(false);
+        label3.setVisible(false);
+        label4.setVisible(false);
+
+        BufferedImage image
+                = SwingFXUtils.fromFXImage(originalImage.getImage(), null);
+
+        switch (filterName) {
+            case "Tonos de gris":
+                Filter.grayScaleFilter(image);
+                break;
+            case "Rojo":
+                Filter.redFilter(image);
+                break;
+            case "Verde":
+                Filter.greenFilter(image);
+                break;
+            case "Azul":
+                Filter.blueFilter(image);
+                break;
+            case "Aleatorio":
+                Filter.randomFilter(image);
+                break;
+            case "Brillo":
+                brightnessSlider.setVisible(true);
+                brightnessSlider.setValue(0);
+                if (filteredImage.getImage() != null) {
+                    filteredImage.setImage(null);
+                }
+                saveImage.setVisible(false);
+                return;
+            case "Alto Contraste":
+                Filter.highContrast(image);
+                break;
+            case "Mosaico":
+                mosaicW.setVisible(true);
+                mosaicH.setVisible(true);
+                mosaicSend.setVisible(true);
+                label1.setVisible(true);
+                if (filteredImage.getImage() != null) {
+                    filteredImage.setImage(null);
+                }
+                saveImage.setVisible(false);
+                return;
+            case "Blur":
+                Filter.blur(image);
+                break;
+            case "Motion Blur":
+                Filter.motionBlur(image);
+                break;
+            case "Encontrar Bordes":
+                Filter.findEdges(image);
+                break;
+            case "Sharpen":
+                Filter.sharpen(image);
+                break;
+            case "Emboss":
+                Filter.emboss(image);
+                break;
+            case "Inverso":
+                Filter.inverse(image);
+                break;
+            case "Micas de Color":
+                colorR.setVisible(true);
+                colorG.setVisible(true);
+                colorB.setVisible(true);
+                mosaicSend.setVisible(true);
+                label2.setVisible(true);
+                label3.setVisible(true);
+                label4.setVisible(true);
+                if (filteredImage.getImage() != null) {
+                    filteredImage.setImage(null);
+                }
+                saveImage.setVisible(false);
+                return;
+            case "Marca de Agua":
+                Filter.waterMark(image);
+                break;
+
+        }
+
+        Image filtered = SwingFXUtils.toFXImage(image, null);
+        filteredImage.setImage(filtered);
+        saveImage.setVisible(true);
     }
 
     @FXML
     private void handleMosaicSend(ActionEvent event) {
         saveImage.setVisible(false);
         BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
-						       null);
+                null);
 
         if (mosaicW.isVisible()) {
 
@@ -313,7 +371,7 @@ public class FXMLDocumentController implements Initializable {
         } else if (colorR.isVisible()) {
 
             if (!isNumeric(colorR.getText()) || !isNumeric(colorG.getText())
-		|| !isNumeric(colorB.getText())) {
+                    || !isNumeric(colorB.getText())) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Advertencia");
                 alert.setHeaderText("");
@@ -356,21 +414,21 @@ public class FXMLDocumentController implements Initializable {
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
         brightnessSlider.valueProperty().addListener(new ChangeListener<Number>() {
-		@Override
-		public void changed(ObservableValue<? extends Number> observable,
-				    Number oldValue, Number newValue) {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                    Number oldValue, Number newValue) {
 
-		    BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
-								   null);
+                BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
+                        null);
 
-		    Filter.brightnessFilter(image,
-					    brightnessSlider.valueProperty().getValue().intValue());
+                Filter.brightnessFilter(image,
+                        brightnessSlider.valueProperty().getValue().intValue());
 
-		    Image filtered = SwingFXUtils.toFXImage(image, null);
-		    filteredImage.setImage(filtered);
-		    saveImage.setVisible(true);
-		}
-	    });
+                Image filtered = SwingFXUtils.toFXImage(image, null);
+                filteredImage.setImage(filtered);
+                saveImage.setVisible(true);
+            }
+        });
     }
 
 }

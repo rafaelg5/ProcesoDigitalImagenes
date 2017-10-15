@@ -10,26 +10,24 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pdi.FXMLDocumentController">
     <children>
-        <SplitPane disable="true" dividerPositions="0.5" layoutY="36.0" prefHeight="342.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <SplitPane disable="true" dividerPositions="0.5" layoutY="39.0" prefHeight="561.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="39.0">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="158.0" prefWidth="149.0">
                <children>
-                  <ImageView fx:id="originalImage" cache="true" fitHeight="559.0" fitWidth="507.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="38.0" />
+                  <ImageView fx:id="originalImage" cache="true" fitHeight="524.0" fitWidth="500.0" layoutX="4.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="31.0" />
                </children>
             </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="210.0" prefWidth="229.0">
                <children>
-                  <ImageView fx:id="filteredImage" cache="true" fitHeight="559.0" fitWidth="507.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="filteredImage" cache="true" fitHeight="524.0" fitWidth="500.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="31.0" />
                </children>
             </AnchorPane>
             </items>
         </SplitPane>
         <Pane layoutX="65.0" layoutY="77.0" prefHeight="342.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <ToolBar layoutY="1.0" prefHeight="40.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <ToolBar layoutY="35.0" prefHeight="21.0" prefWidth="1024.0" AnchorPane.bottomAnchor="519.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0">
                     <items>
-                        <Button fx:id="chooseButton" mnemonicParsing="false" onAction="#handleChooseButton" text="Cargar Imagen" />
-                        <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterButton" prefHeight="16.0" prefWidth="66.0" text="Filtro" />
                   <Label fx:id="label2" prefHeight="15.0" prefWidth="16.0" text="R:" visible="false" />
                   <TextField fx:id="colorR" prefHeight="25.0" prefWidth="44.0" visible="false" />
                   <Label fx:id="label3" text="G:" visible="false" />
@@ -41,9 +39,38 @@
                   <TextField fx:id="mosaicH" prefHeight="25.0" prefWidth="49.0" visible="false" />
                   <Button fx:id="mosaicSend" mnemonicParsing="false" onAction="#handleMosaicSend" text="Aplicar" visible="false" />
                   <Slider fx:id="brightnessSlider" max="255.0" min="-255.0" prefHeight="16.0" prefWidth="187.0" visible="false" />
-                  <Button fx:id="saveImage" mnemonicParsing="false" onAction="#handleSaveButton" text="Guardar Imagen" visible="false" />
                     </items>
                 </ToolBar>
+            <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="34.0" prefWidth="1024.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="Archivo">
+                  <items>
+                    <MenuItem fx:id="loadImage" mnemonicParsing="false" onAction="#handleLoadImage" text="Cargar Imagen" />
+                        <MenuItem fx:id="saveImage" mnemonicParsing="false" onAction="#handleSaveImage" text="Guardar Imagen" visible="false" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Filtro">
+                  <items>
+                    <MenuItem fx:id="grayScaleF" mnemonicParsing="false" onAction="#handleGrayScale" text="Tonos de gris" />
+                        <MenuItem fx:id="redF" mnemonicParsing="false" onAction="#handleRed" text="Rojo" />
+                        <MenuItem fx:id="greenF" mnemonicParsing="false" onAction="#handleGreen" text="Verde" />
+                        <MenuItem fx:id="blueF" mnemonicParsing="false" onAction="#handleBlue" text="Azul" />
+                        <MenuItem fx:id="randomF" mnemonicParsing="false" onAction="#handleRandom" text="Aleatorio" />
+                        <MenuItem fx:id="brightnessF" mnemonicParsing="false" onAction="#handleBrightness" text="Brillo" />
+                        <MenuItem fx:id="highContrastF" mnemonicParsing="false" onAction="#handleHC" text="Alto Contraste" />
+                        <MenuItem fx:id="mosaicF" mnemonicParsing="false" onAction="#handleMosaic" text="Mosaico" />
+                        <MenuItem fx:id="blurF" mnemonicParsing="false" onAction="#handleBlur" text="Blur" />
+                        <MenuItem fx:id="mblurF" mnemonicParsing="false" onAction="#handleMBlur" text="Motion Blur" />
+                        <MenuItem fx:id="findEdgesF" mnemonicParsing="false" onAction="#handleFindEdges" text="Encontrar Bordes" />
+                        <MenuItem fx:id="sharpenF" mnemonicParsing="false" onAction="#handleSharpen" text="Sharpen" />
+                        <MenuItem fx:id="embossF" mnemonicParsing="false" onAction="#handleEmboss" text="Emboss" />
+                        <MenuItem fx:id="inverseF" mnemonicParsing="false" onAction="#handleInverse" text="Inverso" />
+                        <MenuItem fx:id="andyWF" mnemonicParsing="false" onAction="#handleAndyWarhol" text="Micas de Color" />
+                        <MenuItem fx:id="customWatermarkF" mnemonicParsing="false" onAction="#handleWM" text="Marca de Agua" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
             </children>
         </Pane>
     </children>
