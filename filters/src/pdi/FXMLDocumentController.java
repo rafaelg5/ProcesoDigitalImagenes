@@ -2,9 +2,15 @@ package pdi;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
@@ -16,6 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
+import javax.swing.text.BadLocationException;
 
 /**
  *
@@ -36,29 +43,31 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private MenuItem blueF;
     @FXML
-    private MenuItem randomF;    
+    private MenuItem randomF;
     @FXML
     private MenuItem brightnessF;
     @FXML
-    private MenuItem highContrastF;  
+    private MenuItem highContrastF;
     @FXML
-    private MenuItem mosaicF;  
+    private MenuItem mosaicF;
     @FXML
-    private MenuItem blurF;  
+    private MenuItem blurF;
     @FXML
-    private MenuItem mblurF;  
+    private MenuItem mblurF;
     @FXML
-    private MenuItem findEdgesF;  
+    private MenuItem findEdgesF;
     @FXML
-    private MenuItem sharpenF;  
+    private MenuItem sharpenF;
     @FXML
-    private MenuItem embossF; 
+    private MenuItem embossF;
     @FXML
     private MenuItem inverseF;
     @FXML
     private MenuItem andyWF;
     @FXML
     private MenuItem customWatermarkF;
+    @FXML
+    private MenuItem oneLetterGS;
     @FXML
     private ImageView originalImage;
     @FXML
@@ -109,7 +118,7 @@ public class FXMLDocumentController implements Initializable {
             String fileName = file.getName();
             String ext = fileName.substring(fileName.length() - 4);
 
-            boolean matches = ext.matches(".jpg|.gif|jpeg|.png|.svg");
+            boolean matches = ext.matches(".jpg|.gif|jpeg|.png|.svg|.TTF");
 
             if (!matches) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -164,84 +173,89 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleGrayScale(ActionEvent event) {
-        handleFilters(grayScaleF.getText());        
+        handleFilters(grayScaleF.getText());
     }
-    
+
     @FXML
     private void handleRed(ActionEvent event) {
         handleFilters(redF.getText());
     }
-    
+
     @FXML
     private void handleGreen(ActionEvent event) {
         handleFilters(greenF.getText());
     }
-    
+
     @FXML
     private void handleBlue(ActionEvent event) {
         handleFilters(blueF.getText());
     }
-    
+
     @FXML
     private void handleRandom(ActionEvent event) {
         handleFilters(randomF.getText());
     }
-    
+
     @FXML
     private void handleBrightness(ActionEvent event) {
         handleFilters(brightnessF.getText());
     }
-    
+
     @FXML
     private void handleHC(ActionEvent event) {
         handleFilters(highContrastF.getText());
     }
-    
+
     @FXML
     private void handleMosaic(ActionEvent event) {
         handleFilters(mosaicF.getText());
     }
-    
+
     @FXML
     private void handleBlur(ActionEvent event) {
         handleFilters(blurF.getText());
     }
-    
+
     @FXML
     private void handleMBlur(ActionEvent event) {
         handleFilters(mblurF.getText());
     }
-    
+
     @FXML
     private void handleFindEdges(ActionEvent event) {
-        handleFilters(findEdgesF.getText());    
+        handleFilters(findEdgesF.getText());
     }
-    
+
     @FXML
     private void handleSharpen(ActionEvent event) {
         handleFilters(sharpenF.getText());
     }
-    
+
     @FXML
     private void handleEmboss(ActionEvent event) {
         handleFilters(embossF.getText());
     }
-    
+
     @FXML
     private void handleInverse(ActionEvent event) {
         handleFilters(inverseF.getText());
     }
-    
+
     @FXML
     private void handleAndyWarhol(ActionEvent event) {
         handleFilters(andyWF.getText());
     }
-    
+
     @FXML
     private void handleWM(ActionEvent event) {
         handleFilters(customWatermarkF.getText());
     }
-    
+
+    @FXML
+    private void handleOLGS(ActionEvent event) {
+        handleFilters(oneLetterGS.getText());
+    }
+
     private void handleFilters(String filterName) {
 
         if (originalImage.getImage() == null) {
@@ -340,6 +354,25 @@ public class FXMLDocumentController implements Initializable {
             case "Marca de Agua":
                 Filter.waterMark(image);
                 break;
+            case "Letras (Tonos de gris)":
+                
+                String html = LetterFilter.oneLetterGrayScale(image);
+
+                TextInputDialog dialog = new TextInputDialog("img");
+                dialog.setTitle("Guardar imagen");
+                dialog.setContentText("Nombre de archivo:");
+                Optional<String> result = dialog.showAndWait();
+                result.ifPresent(file -> {
+                    PrintWriter writer;
+                    try {
+                        writer = new PrintWriter("src/saved_images/" + file
+                                + ".html", "UTF-8");
+                        writer.println(html);
+                        writer.close();
+                    } catch (Exception ex) {
+                    }
+                });
+                return;
 
         }
 

@@ -67,6 +67,7 @@
                         <MenuItem fx:id="inverseF" mnemonicParsing="false" onAction="#handleInverse" text="Inverso" />
                         <MenuItem fx:id="andyWF" mnemonicParsing="false" onAction="#handleAndyWarhol" text="Micas de Color" />
                         <MenuItem fx:id="customWatermarkF" mnemonicParsing="false" onAction="#handleWM" text="Marca de Agua" />
+                        <MenuItem fx:id="oneLetterGS" mnemonicParsing="false" onAction="#handleOLGS" text="Letras (Tonos de gris)" />
                   </items>
                 </Menu>
               </menus>
