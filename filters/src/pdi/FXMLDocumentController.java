@@ -2,15 +2,11 @@ package pdi;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
@@ -22,7 +18,6 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
-import javax.swing.text.BadLocationException;
 
 /**
  *
@@ -67,7 +62,13 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private MenuItem customWatermarkF;
     @FXML
-    private MenuItem oneLetterGS;
+    private MenuItem oneLetterColorF;
+    @FXML
+    private MenuItem oneLetterGSF;
+    @FXML
+    private MenuItem manyLettersF;
+    @FXML
+    private MenuItem customTextF;
     @FXML
     private ImageView originalImage;
     @FXML
@@ -252,8 +253,23 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
+    private void handleOLC(ActionEvent event) {
+        handleFilters(oneLetterColorF.getText());
+    }
+
+    @FXML
     private void handleOLGS(ActionEvent event) {
-        handleFilters(oneLetterGS.getText());
+        handleFilters(oneLetterGSF.getText());
+    }
+
+    @FXML
+    private void handleML(ActionEvent event) {
+        handleFilters(manyLettersF.getText());
+    }
+
+    @FXML
+    private void handleCustomText(ActionEvent event) {
+        handleFilters(customTextF.getText());
     }
 
     private void handleFilters(String filterName) {
@@ -354,31 +370,53 @@ public class FXMLDocumentController implements Initializable {
             case "Marca de Agua":
                 Filter.waterMark(image);
                 break;
-            case "Letras (Tonos de gris)":
-                
-                String html = LetterFilter.oneLetterGrayScale(image);
+            case "Una Letra (Color)":
 
-                TextInputDialog dialog = new TextInputDialog("img");
-                dialog.setTitle("Guardar imagen");
-                dialog.setContentText("Nombre de archivo:");
-                Optional<String> result = dialog.showAndWait();
-                result.ifPresent(file -> {
-                    PrintWriter writer;
-                    try {
-                        writer = new PrintWriter("src/saved_images/" + file
-                                + ".html", "UTF-8");
-                        writer.println(html);
-                        writer.close();
-                    } catch (Exception ex) {
-                    }
-                });
+                String html = LetterFilter.oneLetterColor(image);
+                saveHTMLDialog(html);
+                return;
+            case "Una Letra (Tonos de gris)":
+                html = LetterFilter.oneLetterGrayScale(image);
+                saveHTMLDialog(html);
+                return;
+            case "Varias Letras":
+                html = LetterFilter.manyLetters(image);
+                saveHTMLDialog(html);
                 return;
 
+            case "Texto":
+
+                TextInputDialog text = new TextInputDialog("");
+                text.setTitle("Definir texto");
+                text.setContentText("Texto:");
+                Optional<String> rtext = text.showAndWait();
+                rtext.ifPresent(t -> {
+                    String h = LetterFilter.customTextFilter(image, t);
+                    saveHTMLDialog(h);
+                });
+                return;
         }
 
         Image filtered = SwingFXUtils.toFXImage(image, null);
         filteredImage.setImage(filtered);
         saveImage.setVisible(true);
+    }
+
+    private void saveHTMLDialog(String html) {
+        TextInputDialog dialog = new TextInputDialog("img");
+        dialog.setTitle("Guardar imagen");
+        dialog.setContentText("Nombre de archivo:");
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(file -> {
+            PrintWriter writer;
+            try {
+                writer = new PrintWriter("src/saved_images/" + file
+                        + ".html", "UTF-8");
+                writer.println(html);
+                writer.close();
+            } catch (Exception ex) {
+            }
+        });
     }
 
     @FXML

@@ -3,7 +3,6 @@ package pdi;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
-import java.util.LinkedList;
 
 public class Filter {
 
