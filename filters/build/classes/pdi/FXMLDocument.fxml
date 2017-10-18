@@ -71,6 +71,9 @@
                         <MenuItem fx:id="oneLetterGSF" mnemonicParsing="false" onAction="#handleOLGS" text="Una Letra (Tonos de gris)" />
                         <MenuItem fx:id="manyLettersF" mnemonicParsing="false" onAction="#handleML" text="Varias Letras" />
                         <MenuItem fx:id="customTextF" mnemonicParsing="false" onAction="#handleCustomText" text="Texto" />
+                        <MenuItem fx:id="pokerF" mnemonicParsing="false" onAction="#handlePoker" text="Naipes" />
+                        <MenuItem fx:id="blackDominoF" mnemonicParsing="false" onAction="#handleBlackDomino" text="Dominó (Negro)" />
+                        <MenuItem fx:id="whiteDominoF" mnemonicParsing="false" onAction="#handleWhiteDomino" text="Dominó (Blanco)" />
                   </items>
                 </Menu>
               </menus>

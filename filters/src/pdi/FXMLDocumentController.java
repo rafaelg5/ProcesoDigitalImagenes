@@ -1,22 +1,24 @@
 package pdi;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
+import java.util.*;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
 import javax.imageio.ImageIO;
 
 /**
@@ -69,6 +71,12 @@ public class FXMLDocumentController implements Initializable {
     private MenuItem manyLettersF;
     @FXML
     private MenuItem customTextF;
+    @FXML
+    private MenuItem pokerF;
+    @FXML
+    private MenuItem blackDominoF;
+    @FXML
+    private MenuItem whiteDominoF;
     @FXML
     private ImageView originalImage;
     @FXML
@@ -272,6 +280,21 @@ public class FXMLDocumentController implements Initializable {
         handleFilters(customTextF.getText());
     }
 
+    @FXML
+    private void handlePoker(ActionEvent event) {
+        handleFilters(pokerF.getText());
+    }
+
+    @FXML
+    private void handleBlackDomino(ActionEvent event) {
+        handleFilters(blackDominoF.getText());
+    }
+
+    @FXML
+    private void handleWhiteDomino(ActionEvent event) {
+        handleFilters(whiteDominoF.getText());
+    }
+
     private void handleFilters(String filterName) {
 
         if (originalImage.getImage() == null) {
@@ -372,15 +395,34 @@ public class FXMLDocumentController implements Initializable {
                 break;
             case "Una Letra (Color)":
 
-                String html = LetterFilter.oneLetterColor(image);
+                Pair<String, String> xy = setHTMLLetters();
+                if (xy == null || !isCorrect(xy)) {
+                    return;
+                }
+
+                String html = LetterFilter.oneLetterColor(image,
+                        Integer.parseInt(xy.getKey()),
+                        Integer.parseInt(xy.getValue()));
                 saveHTMLDialog(html);
                 return;
             case "Una Letra (Tonos de gris)":
-                html = LetterFilter.oneLetterGrayScale(image);
+                xy = setHTMLLetters();
+                if (xy == null || !isCorrect(xy)) {
+                    return;
+                }
+                html = LetterFilter.oneLetterGrayScale(image,
+                        Integer.parseInt(xy.getKey()),
+                        Integer.parseInt(xy.getValue()));
                 saveHTMLDialog(html);
                 return;
             case "Varias Letras":
-                html = LetterFilter.manyLetters(image);
+                xy = setHTMLLetters();
+                if (xy == null || !isCorrect(xy)) {
+                    return;
+                }
+                html = LetterFilter.manyLetters(image,
+                        Integer.parseInt(xy.getKey()),
+                        Integer.parseInt(xy.getValue()));
                 saveHTMLDialog(html);
                 return;
 
@@ -395,11 +437,56 @@ public class FXMLDocumentController implements Initializable {
                     saveHTMLDialog(h);
                 });
                 return;
+
+            case "Naipes":
+                xy = setHTMLLetters();
+                if (xy == null || !isCorrect(xy)) {
+                    return;
+                }
+                html = LetterFilter.pokerFilter(image,
+                        Integer.parseInt(xy.getKey()),
+                        Integer.parseInt(xy.getValue()));
+                saveHTMLDialog(html);
+                return;
+
+            case "Dominó (Negro)":
+                xy = setHTMLLetters();
+                if (xy == null || !isCorrect(xy)) {
+                    return;
+                }
+                html = LetterFilter.blackDominoFilter(image,
+                        Integer.parseInt(xy.getKey()),
+                        Integer.parseInt(xy.getValue()));
+                saveHTMLDialog(html);
+                return;
+
+            case "Dominó (Blanco)":
+                xy = setHTMLLetters();
+                if (xy == null || !isCorrect(xy)) {
+                    return;
+                }
+                html = LetterFilter.whiteDominoFilter(image,
+                        Integer.parseInt(xy.getKey()),
+                        Integer.parseInt(xy.getValue()));
+                saveHTMLDialog(html);
+                return;
         }
 
         Image filtered = SwingFXUtils.toFXImage(image, null);
         filteredImage.setImage(filtered);
         saveImage.setVisible(true);
+    }
+
+    private boolean isCorrect(Pair<String, String> p) {
+        if (!isIntegerGT0(p.getKey()) || !isIntegerGT0(p.getValue())) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setContentText("Valores incorrectos!");
+
+            alert.showAndWait();
+            return false;
+        }
+        return true;
     }
 
     private void saveHTMLDialog(String html) {
@@ -414,9 +501,53 @@ public class FXMLDocumentController implements Initializable {
                         + ".html", "UTF-8");
                 writer.println(html);
                 writer.close();
-            } catch (Exception ex) {
+            } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             }
         });
+    }
+
+    private Pair<String, String> setHTMLLetters() {
+
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("# de letras de la imagen");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK,
+                ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField width = new TextField();
+        width.setPromptText("90");
+        TextField height = new TextField();
+        height.setPromptText("90");
+
+        grid.add(new Label("Ancho:"), 0, 0);
+        grid.add(width, 1, 0);
+        grid.add(new Label("Alto:"), 0, 1);
+        grid.add(height, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+        Platform.runLater(() -> width.requestFocus());
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton.getButtonData() == ButtonData.OK_DONE) {
+                return new Pair<>(width.getText(), width.getText());
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            return result.get();
+        }
+        return null;
+    }
+
+    private boolean isIntegerGT0(String s) {
+        return s.matches("([1-9][0-9]*)");
     }
 
     @FXML
@@ -484,21 +615,16 @@ public class FXMLDocumentController implements Initializable {
         fileChooser.setTitle("Cargar Imagen");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
-        brightnessSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                    Number oldValue, Number newValue) {
+        brightnessSlider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
+                    null);
 
-                BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
-                        null);
+            Filter.brightnessFilter(image,
+                    brightnessSlider.valueProperty().getValue().intValue());
 
-                Filter.brightnessFilter(image,
-                        brightnessSlider.valueProperty().getValue().intValue());
-
-                Image filtered = SwingFXUtils.toFXImage(image, null);
-                filteredImage.setImage(filtered);
-                saveImage.setVisible(true);
-            }
+            Image filtered = SwingFXUtils.toFXImage(image, null);
+            filteredImage.setImage(filtered);
+            saveImage.setVisible(true);
         });
     }
 

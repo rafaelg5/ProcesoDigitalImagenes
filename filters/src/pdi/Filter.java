@@ -105,11 +105,11 @@ public class Filter {
 
         int width = img.getWidth();
         int height = img.getHeight();
+        Color newColor = new Color(0,0,0);
 
         for (int row = 0; row < height; row++)
             for (int col = 0; col < width; col++) {
-
-                Color newColor = null;
+                
                 int red = getImageColor(img, col, row, RED);
                 int green = getImageColor(img, col, row, GREEN);
                 int blue = getImageColor(img, col, row, BLUE);
@@ -379,32 +379,19 @@ public class Filter {
         int width = img.getWidth();
         int height = img.getHeight();
         Color newColor = null;
-	AlphaComposite alpha =
-	    AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.2F);
 
         for (int i = 0; i < width; i++)
-            for (int j = 0; j < height; j++) {
-
-                int red1 = 0, green1 = 0, blue1 = 0, red2 = 0, green2 = 0,
-		    blue2 = 0, red3 = 0, green3 = 0, blue3 = 0;
+            for (int j = 0; j < height; j++) {                
                 
                 int r = getImageColor(img, i, j, RED);
                 int g = getImageColor(img, i, j, GREEN);
                 int b = getImageColor(img, i, j, BLUE);
 
-                red1 = r * 255;
-                green1 = g * 255;
-                blue1 = b * 255;
+                int auxR = (r * 255) & (int)red;
+                int auxG = (g * 255) & (int)green;
+                int auxB = (b * 255) & (int)blue;
 
-                red2 = (int)red;
-                green2 = (int)green;
-                blue2 = (int)blue;
-
-                red3 = red1 & red2;
-                green3 = green1 & green2;
-                blue3 = blue1 & blue2;
-
-                newColor = new Color(red3, green3, blue3);
+                newColor = new Color(auxR, auxG, auxB);
                 img.setRGB(i, j, newColor.getRGB());
             }
     }
