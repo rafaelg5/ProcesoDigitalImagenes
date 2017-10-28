@@ -14,7 +14,19 @@ public class LetterFilter {
             + "charset=UTF-8'>\n<html>\n<head>\n" + "<style>\n?S\n</style>\n"
             + "<title>?T</title>\n<body>\n?B\n</body>\n</html>";
 
-    private static Color regionAvgColor(int startH, int endH, int startW,
+    /**
+     * Determina el promedio de color de una región de una imagen
+     *
+     * @param startH el inicio de y
+     * @param endH el fin de y
+     * @param startW el inicio de x
+     * @param endW el fin de x
+     * @param newHeight el ancho de la región
+     * @param newWidth el alto de la región
+     * @param img la imagen
+     * @return el color de la región
+     */
+    public static Color regionAvgColor(int startH, int endH, int startW,
             int endW, int newHeight, int newWidth, BufferedImage img) {
         int r = 0;
         int g = 0;
@@ -38,13 +50,33 @@ public class LetterFilter {
         return new Color(r, g, b);
     }
 
-    private static int regionAvg(int startH, int endH, int startW, int endW,
+    /**
+     * Determina el promedio de color de una región
+     *
+     * @param startH el inicio de y
+     * @param endH el fin de y
+     * @param startW el inicio de x
+     * @param endW el fin de x
+     * @param newHeight el ancho de la región
+     * @param newWidth el alto de la región
+     * @param img la imagen
+     * @return el entero que representa el promedio
+     */
+    public static int regionAvg(int startH, int endH, int startW, int endW,
             int newHeight, int newWidth, BufferedImage img) {
         Color c = regionAvgColor(startH, endH, startW, endW, newHeight, newWidth,
                 img);
         return (c.getRed() + c.getGreen() + c.getBlue()) / 3;
     }
 
+    /**
+     * Genera una imagen usando la letra '@' con diferentes colores
+     *
+     * @param img la imagen
+     * @param x el número de letras de largo
+     * @param y el número de letras de ancho
+     * @return una cadena que representa el archivo html con la imagen
+     */
     public static String oneLetterColor(BufferedImage img, int x, int y) {
 
         int newHeight = img.getHeight() / y;
@@ -74,6 +106,14 @@ public class LetterFilter {
         return htmlFile;
     }
 
+    /**
+     * Genera una imagen usando la letra '@' en escala de grises
+     *
+     * @param img la imagen
+     * @param x el número de letras de largo
+     * @param y el número de letras de ancho
+     * @return una cadena que representa el archivo html con la imagen
+     */
     public static String oneLetterGrayScale(BufferedImage img, int x, int y) {
 
         int newHeight = img.getHeight() / y;
@@ -104,6 +144,14 @@ public class LetterFilter {
         return htmlFile;
     }
 
+    /**
+     * Genera una imagen usando la letra diferentes letras
+     *
+     * @param img la imagen
+     * @param x el número de letras de largo
+     * @param y el número de letras de ancho
+     * @return una cadena que representa el archivo html con la imagen
+     */
     public static String manyLetters(BufferedImage img, int x, int y) {
 
         int newHeight = img.getHeight() / y;
@@ -164,6 +212,13 @@ public class LetterFilter {
         return htmlFile;
     }
 
+    /**
+     * Genera una imagen usando una cadena de texto
+     *
+     * @param img la imagen
+     * @param txt el texto
+     * @return una cadena que representa el archivo html con la imagen
+     */
     public static String customTextFilter(BufferedImage img, String txt) {
 
         int newHeight = img.getHeight() / 200;
@@ -201,6 +256,14 @@ public class LetterFilter {
         return htmlFile;
     }
 
+    /**
+     * Genera una imagen usando letras de la fuente 'PlayingCards' que son 
+     * cartas de póker     
+     * @param img la imagen
+     * @param x el número de letras de largo
+     * @param y el número de letras de ancho
+     * @return una cadena que representa el archivo html con la imagen
+     */
     public static String pokerFilter(BufferedImage img, int x, int y) {
 
         int newHeight = img.getHeight() / y;
@@ -251,6 +314,14 @@ public class LetterFilter {
         return htmlFile;
     }
 
+    /**
+     * Genera una imagen usando letras de la fuente 'Las Vegas Black Dominoes', 
+     * las cuales son fichas negras de dominó     
+     * @param img la imagen
+     * @param x el número de letras de largo
+     * @param y el número de letras de ancho
+     * @return una cadena que representa el archivo html con la imagen
+     */
     public static String blackDominoFilter(BufferedImage img, int x, int y) {
 
         int newHeight = img.getHeight() / y;
@@ -292,7 +363,15 @@ public class LetterFilter {
         htmlFile += HTML.substring(bodyIndex + 2);
         return htmlFile;
     }
-    
+
+    /**
+     * Genera una imagen usando letras de la fuente 'Las Vegas White Dominoes', 
+     * las cuales son fichas blancas de dominó     
+     * @param img la imagen
+     * @param x el número de letras de largo
+     * @param y el número de letras de ancho
+     * @return una cadena que representa el archivo html con la imagen
+     */
     public static String whiteDominoFilter(BufferedImage img, int x, int y) {
 
         int newHeight = img.getHeight() / y;

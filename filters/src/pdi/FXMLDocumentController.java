@@ -78,6 +78,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private MenuItem whiteDominoF;
     @FXML
+    private MenuItem recursiveBWF;
+    @FXML
+    private MenuItem recursiveCF;
+    @FXML
     private ImageView originalImage;
     @FXML
     private ImageView filteredImage;
@@ -294,6 +298,16 @@ public class FXMLDocumentController implements Initializable {
     private void handleWhiteDomino(ActionEvent event) {
         handleFilters(whiteDominoF.getText());
     }
+    
+    @FXML
+    private void handleRecursiveBW(ActionEvent event) {
+        handleFilters(recursiveBWF.getText());
+    }
+    
+    @FXML
+    private void handleRecursiveColor(ActionEvent event) {
+        handleFilters(recursiveCF.getText());
+    }
 
     private void handleFilters(String filterName) {
 
@@ -324,19 +338,20 @@ public class FXMLDocumentController implements Initializable {
 
         switch (filterName) {
             case "Tonos de gris":
-                Filter.grayScaleFilter(image);
+                Filter.grayScale(image);
                 break;
             case "Rojo":
-                Filter.redFilter(image);
+                Filter.red(image);
                 break;
             case "Verde":
-                Filter.greenFilter(image);
+                Filter.green(image);
                 break;
             case "Azul":
-                Filter.blueFilter(image);
+                //Filter.blue(image);
+                image = Filter.recursiveColor(image);
                 break;
             case "Aleatorio":
-                Filter.randomFilter(image);
+                Filter.random(image);
                 break;
             case "Brillo":
                 brightnessSlider.setVisible(true);
@@ -393,8 +408,7 @@ public class FXMLDocumentController implements Initializable {
             case "Marca de Agua":
                 Filter.waterMark(image);
                 break;
-            case "Una Letra (Color)":
-
+            case "Una Letra (Color)": {
                 Pair<String, String> xy = setHTMLLetters();
                 if (xy == null || !isCorrect(xy)) {
                     return;
@@ -405,78 +419,96 @@ public class FXMLDocumentController implements Initializable {
                         Integer.parseInt(xy.getValue()));
                 saveHTMLDialog(html);
                 return;
-            case "Una Letra (Tonos de gris)":
-                xy = setHTMLLetters();
+            }
+            case "Una Letra (Tonos de gris)": {
+                Pair<String, String> xy = setHTMLLetters();
                 if (xy == null || !isCorrect(xy)) {
                     return;
                 }
-                html = LetterFilter.oneLetterGrayScale(image,
-                        Integer.parseInt(xy.getKey()),
-                        Integer.parseInt(xy.getValue()));
-                saveHTMLDialog(html);
-                return;
-            case "Varias Letras":
-                xy = setHTMLLetters();
-                if (xy == null || !isCorrect(xy)) {
-                    return;
-                }
-                html = LetterFilter.manyLetters(image,
-                        Integer.parseInt(xy.getKey()),
-                        Integer.parseInt(xy.getValue()));
-                saveHTMLDialog(html);
-                return;
 
+                String html = LetterFilter.oneLetterGrayScale(image,
+                        Integer.parseInt(xy.getKey()),
+                        Integer.parseInt(xy.getValue()));
+                saveHTMLDialog(html);
+                return;
+            }
+            case "Varias Letras": {
+                Pair<String, String> xy = setHTMLLetters();
+                if (xy == null || !isCorrect(xy)) {
+                    return;
+                }
+                String html = LetterFilter.manyLetters(image,
+                        Integer.parseInt(xy.getKey()),
+                        Integer.parseInt(xy.getValue()));
+                saveHTMLDialog(html);
+                return;
+            }
             case "Texto":
-
                 TextInputDialog text = new TextInputDialog("");
                 text.setTitle("Definir texto");
                 text.setContentText("Texto:");
                 Optional<String> rtext = text.showAndWait();
                 rtext.ifPresent(t -> {
-                    String h = LetterFilter.customTextFilter(image, t);
-                    saveHTMLDialog(h);
+                    BufferedImage img
+                            = SwingFXUtils.fromFXImage(originalImage.getImage(), null);
+                    String html = LetterFilter.customTextFilter(img, t);
+                    saveHTMLDialog(html);
                 });
                 return;
-
-            case "Naipes":
-                xy = setHTMLLetters();
+            case "Naipes": {
+                Pair<String, String> xy = setHTMLLetters();
                 if (xy == null || !isCorrect(xy)) {
                     return;
                 }
-                html = LetterFilter.pokerFilter(image,
+                String html = LetterFilter.pokerFilter(image,
                         Integer.parseInt(xy.getKey()),
                         Integer.parseInt(xy.getValue()));
                 saveHTMLDialog(html);
                 return;
-
-            case "Dominó (Negro)":
-                xy = setHTMLLetters();
+            }
+            case "Dominó (Negro)": {
+                Pair<String, String> xy = setHTMLLetters();
                 if (xy == null || !isCorrect(xy)) {
                     return;
                 }
-                html = LetterFilter.blackDominoFilter(image,
+                String html = LetterFilter.blackDominoFilter(image,
                         Integer.parseInt(xy.getKey()),
                         Integer.parseInt(xy.getValue()));
                 saveHTMLDialog(html);
                 return;
-
-            case "Dominó (Blanco)":
-                xy = setHTMLLetters();
+            }
+            case "Dominó (Blanco)": {
+                Pair<String, String> xy = setHTMLLetters();
                 if (xy == null || !isCorrect(xy)) {
                     return;
                 }
-                html = LetterFilter.whiteDominoFilter(image,
+                String html = LetterFilter.whiteDominoFilter(image,
                         Integer.parseInt(xy.getKey()),
                         Integer.parseInt(xy.getValue()));
                 saveHTMLDialog(html);
                 return;
+            }
+            case "Recursivo (Tonos de Gris)":                
+                image = Filter.recursiveBW(image);
+                break;
+            case "Recursivo (Color)":
+                image = Filter.recursiveColor(image);
+                break;
         }
 
         Image filtered = SwingFXUtils.toFXImage(image, null);
+
         filteredImage.setImage(filtered);
-        saveImage.setVisible(true);
+
+        saveImage.setVisible(
+                true);
     }
 
+    /**
+     * Verifica que los valores de un par sean enteros correctos
+     * @param p el par
+     * @return true si son correctos
+     */
     private boolean isCorrect(Pair<String, String> p) {
         if (!isIntegerGT0(p.getKey()) || !isIntegerGT0(p.getValue())) {
             Alert alert = new Alert(AlertType.WARNING);
@@ -489,6 +521,10 @@ public class FXMLDocumentController implements Initializable {
         return true;
     }
 
+    /**
+     * Despliega un dialogo para guardar el archivo html generado
+     * @param html la cadena que compone el archivo
+     */
     private void saveHTMLDialog(String html) {
         TextInputDialog dialog = new TextInputDialog("img");
         dialog.setTitle("Guardar imagen");
@@ -506,6 +542,12 @@ public class FXMLDocumentController implements Initializable {
         });
     }
 
+    /**
+     * Despliega un diálogo para indicar el número de letras que contendrá el 
+     * filtro
+     * @return un par de cadenas que representan el número de letras de ancho y
+     * de alto de la imagen
+     */
     private Pair<String, String> setHTMLLetters() {
 
         Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -546,6 +588,11 @@ public class FXMLDocumentController implements Initializable {
         return null;
     }
 
+    /**
+     * 
+     * @param s
+     * @return 
+     */
     private boolean isIntegerGT0(String s) {
         return s.matches("([1-9][0-9]*)");
     }
@@ -601,9 +648,14 @@ public class FXMLDocumentController implements Initializable {
         saveImage.setVisible(true);
     }
 
+    /**
+     * Determina si una cadena es un número
+     * @param str la cadena
+     * @return si la cadena es un número
+     */
     public static boolean isNumeric(String str) {
         try {
-            double d = Double.parseDouble(str);
+            double d = Double.parseDouble(str.trim());
         } catch (NumberFormatException nfe) {
             return false;
         }
@@ -619,7 +671,7 @@ public class FXMLDocumentController implements Initializable {
             BufferedImage image = SwingFXUtils.fromFXImage(originalImage.getImage(),
                     null);
 
-            Filter.brightnessFilter(image,
+            Filter.brightness(image,
                     brightnessSlider.valueProperty().getValue().intValue());
 
             Image filtered = SwingFXUtils.toFXImage(image, null);

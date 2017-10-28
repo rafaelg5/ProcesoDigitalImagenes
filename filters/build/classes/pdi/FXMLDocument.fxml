@@ -74,6 +74,8 @@
                         <MenuItem fx:id="pokerF" mnemonicParsing="false" onAction="#handlePoker" text="Naipes" />
                         <MenuItem fx:id="blackDominoF" mnemonicParsing="false" onAction="#handleBlackDomino" text="Dominó (Negro)" />
                         <MenuItem fx:id="whiteDominoF" mnemonicParsing="false" onAction="#handleWhiteDomino" text="Dominó (Blanco)" />
+                        <MenuItem fx:id="recursiveBWF" mnemonicParsing="false" onAction="#handleRecursiveBW" text="Recursivo (Tonos de Gris)" />
+                        <MenuItem fx:id="recursiveCF" mnemonicParsing="false" onAction="#handleRecursiveColor" text="Recursivo (Color)" />
                   </items>
                 </Menu>
               </menus>
