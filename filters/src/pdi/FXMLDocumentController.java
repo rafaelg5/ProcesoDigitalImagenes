@@ -1,5 +1,6 @@
 package pdi;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
@@ -11,12 +12,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import javax.imageio.ImageIO;
@@ -298,12 +304,12 @@ public class FXMLDocumentController implements Initializable {
     private void handleWhiteDomino(ActionEvent event) {
         handleFilters(whiteDominoF.getText());
     }
-    
+
     @FXML
     private void handleRecursiveBW(ActionEvent event) {
         handleFilters(recursiveBWF.getText());
     }
-    
+
     @FXML
     private void handleRecursiveColor(ActionEvent event) {
         handleFilters(recursiveCF.getText());
@@ -406,7 +412,9 @@ public class FXMLDocumentController implements Initializable {
                 saveImage.setVisible(false);
                 return;
             case "Marca de Agua":
-                Filter.waterMark(image);
+                Filter.waterMark(image);                
+                //Image nI = makeHistogram(image);
+                //image = SwingFXUtils.fromFXImage(nI, null);
                 break;
             case "Una Letra (Color)": {
                 Pair<String, String> xy = setHTMLLetters();
@@ -488,11 +496,11 @@ public class FXMLDocumentController implements Initializable {
                 saveHTMLDialog(html);
                 return;
             }
-            case "Recursivo (Tonos de Gris)":                
+            case "Recursivo (Tonos de Gris)":
                 image = Filter.recursiveBW(image);
                 break;
             case "Recursivo (Color)":
-                image = Filter.recursiveColor(image);
+                image = Filter.recursiveColor(image);                
                 break;
         }
 
@@ -506,6 +514,7 @@ public class FXMLDocumentController implements Initializable {
 
     /**
      * Verifica que los valores de un par sean enteros correctos
+     *
      * @param p el par
      * @return true si son correctos
      */
@@ -523,6 +532,7 @@ public class FXMLDocumentController implements Initializable {
 
     /**
      * Despliega un dialogo para guardar el archivo html generado
+     *
      * @param html la cadena que compone el archivo
      */
     private void saveHTMLDialog(String html) {
@@ -543,8 +553,9 @@ public class FXMLDocumentController implements Initializable {
     }
 
     /**
-     * Despliega un diálogo para indicar el número de letras que contendrá el 
+     * Despliega un diálogo para indicar el número de letras que contendrá el
      * filtro
+     *
      * @return un par de cadenas que representan el número de letras de ancho y
      * de alto de la imagen
      */
@@ -589,9 +600,9 @@ public class FXMLDocumentController implements Initializable {
     }
 
     /**
-     * 
+     *
      * @param s
-     * @return 
+     * @return
      */
     private boolean isIntegerGT0(String s) {
         return s.matches("([1-9][0-9]*)");
@@ -647,9 +658,11 @@ public class FXMLDocumentController implements Initializable {
         filteredImage.setImage(filtered);
         saveImage.setVisible(true);
     }
+    
 
     /**
      * Determina si una cadena es un número
+     *
      * @param str la cadena
      * @return si la cadena es un número
      */

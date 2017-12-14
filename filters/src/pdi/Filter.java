@@ -660,7 +660,7 @@ public class Filter {
         g.dispose();
         return b;
     }
-
+    
     /**
      * Obtiene el r, g o b de una imagen.
      *

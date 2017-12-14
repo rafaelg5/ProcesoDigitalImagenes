@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="histogramaspdi.FXMLDocumentController">
+   <children>
+      <SplitPane disable="true" dividerPositions="0.5" layoutY="39.0" prefHeight="561.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="39.0">
+         <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="158.0" prefWidth="149.0">
+               <children>
+                  <ImageView fx:id="originalImage" cache="true" fitHeight="524.0" fitWidth="500.0" layoutX="4.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="31.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="210.0" prefWidth="229.0">
+               <children>
+                  <LineChart fx:id="chart" layoutY="40.0" prefHeight="360.0" prefWidth="500.0" title="Frecuencias de tonos de gris" visible="false">
+                    <xAxis>
+                      <NumberAxis autoRanging="false" label="RGB" minorTickCount="4" side="BOTTOM" tickUnit="20.0" upperBound="255.0" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis label="Frecuencia" side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+      <Pane layoutX="65.0" layoutY="77.0" prefHeight="342.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="34.0" prefWidth="1024.0">
+               <menus>
+                  <Menu mnemonicParsing="false" text="Archivo">
+                     <items>
+                        <MenuItem fx:id="loadImage" mnemonicParsing="false" onAction="#handleLoadImage" text="Cargar Imagen" />
+                        <MenuItem fx:id="saveImage" mnemonicParsing="false" onAction="#handleSaveImage" text="Guardar Imagen" visible="false" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Filtro">
+                     <items>
+                        <MenuItem fx:id="histogram" mnemonicParsing="false" onAction="#handleHistogram" text="Ver histograma" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleHistogramStretching" text="Stretching" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleHistogramEqualization" text="Ecualización" />
+                     </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
