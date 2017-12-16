@@ -97,7 +97,7 @@ public class windowController implements Initializable {
         alert.setTitle("Acerca de");
         alert.setHeaderText("");
         alert.setContentText("Para cargar una imagen: Archivo -> Cargar imagen"
-                + " -> Seleccionar imagen.\nAl presionar el botón 'Procesar' se "
+                + " -> Seleccionar imagen.\nSi no existe un índice de imágenes, con el botón 'Generar índice' se creará y se habilitará el botón 'Procesar'.\nAl presionar el botón 'Procesar' se "
                 + "generarán los archivos de salida en la carpeta: ouptut/");
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.showAndWait();
