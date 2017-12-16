@@ -11,3 +11,5 @@ Para ejecutar el programa:
 	java -jar dist/<programa>.jar
 
 Algunos filtros pueden tardar más tiempo en aplicarse. Si la aplicación muestra un diálogo de que no está respondiendo, simplemente ignorarlo y esperar a que se aplique el filtro.
+
+*** El programa tiene problemas de compatibilidad en Windows y Mac. Actualmente solo funciona en Linux ***
