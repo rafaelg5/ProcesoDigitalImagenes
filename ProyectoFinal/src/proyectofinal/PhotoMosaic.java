@@ -41,6 +41,7 @@ public class PhotoMosaic {
                 makeImageIndex(ImageIO.read(file), tmp, file.getName());
 
             }
+            imageIndex.delete();
             tmp.renameTo(imageIndex);
 
         }
