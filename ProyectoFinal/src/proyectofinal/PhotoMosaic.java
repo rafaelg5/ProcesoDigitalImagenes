@@ -30,21 +30,6 @@ public class PhotoMosaic {
     public void process() throws IOException {
 
         File imageIndex = new File("output/index.idx");
-        File tmp = new File("output/tmp.txt");
-
-        if (!imageIndex.exists()) {
-
-            File folder = new File("images/");
-            File[] listOfFiles = folder.listFiles();
-
-            for (File file : listOfFiles) {
-                makeImageIndex(ImageIO.read(file), tmp, file.getName());
-
-            }
-            imageIndex.delete();
-            tmp.renameTo(imageIndex);
-
-        }
 
         String html = "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n"
                 + "<tr><td><nobr>";
@@ -62,7 +47,7 @@ public class PhotoMosaic {
                         + "<tr><td><nobr>";
             }
             for (int j = 0; j < 90; j++) {
-                
+
                 // Calcula color de la región
                 Color c = regionAvgColor(j * newWidth, (j * newWidth) + newWidth,
                         i * newHeight, (i * newHeight) + newHeight, newHeight,
@@ -71,12 +56,12 @@ public class PhotoMosaic {
                 FileReader fr = new FileReader("output/index.idx");
                 BufferedReader br = new BufferedReader(fr);
                 String line;
-                
+
                 while ((line = br.readLine()) != null) {
                     String[] chars = line.split(" ");
                     Color newColor = new Color(Integer.parseInt(chars[0]),
                             Integer.parseInt(chars[1]), Integer.parseInt(chars[2]));
-                    int distance = getDistance(c, newColor);                    
+                    int distance = getDistance(c, newColor);
 
                     if (distance < minDistance) {
                         minDistance = distance;
@@ -90,7 +75,7 @@ public class PhotoMosaic {
 
         html += "</nobr></td></tr></table>";
         File htmlFile = new File("output/output.html");
-        
+
         FileWriter fw = new FileWriter(htmlFile, false);
         fw.write(html);
         fw.close();
@@ -98,6 +83,7 @@ public class PhotoMosaic {
 
     /**
      * Calcula la distancia euclidiana entre dos colores
+     *
      * @param c1 el color 1
      * @param c2 el color 2
      * @return la distancia entre c1 y c2
@@ -143,32 +129,41 @@ public class PhotoMosaic {
         Color averageColor = new Color(rAvg, gAvg, bAvg);
         return averageColor;
     }
-
+    
     /**
      * Agrega una línea al archivo de índices de imágenes. Una línea consta de
      * los componentes rgb promedio de la imagen y su nombre
-     *
-     * @param img la imagen de la que se extrae la información
-     * @param tmp el archivo
-     * @param name el nombre de la imagen
+     * @throws IOException si hay algún problema con archivos
      */
-    private void makeImageIndex(BufferedImage img, File tmp, String name) {
+    public void makeImageIndex() throws IOException {
 
-        // Obtener color promedio
-        Color color = getImageAvgColor(img);
-
-        String line = String.format("%d %d %d %s\n", color.getRed(),
-                color.getGreen(), color.getBlue(), name);
-
-        // Escribir en el archivo
-        try {
-            FileWriter fw = new FileWriter(tmp, true);
-            fw.write(line);
-            fw.close();
-        } catch (IOException ioe) {
-            System.out.println(ioe.getMessage());
+        File imageIndex = new File("output/index.idx");
+        if(imageIndex.exists()){
+            return;
         }
         
+        File folder = new File("images/");
+        File[] listOfFiles = folder.listFiles();
+        
+        for (File file : listOfFiles) {
+            
+            BufferedImage img = ImageIO.read(file);
+            // Obtener color promedio
+            Color color = getImageAvgColor(img);
+
+            String line = String.format("%d %d %d %s\n", color.getRed(),
+                    color.getGreen(), color.getBlue(), file.getName());
+
+            // Escribir en el archivo
+            try {
+                FileWriter fw = new FileWriter(imageIndex, true);
+                fw.write(line);
+                fw.close();
+            } catch (IOException ioe) {
+                System.out.println(ioe.getMessage());
+            }
+        }
+
     }
 
     /**

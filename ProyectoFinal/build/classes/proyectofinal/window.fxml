@@ -31,6 +31,7 @@
               </menus>
             </MenuBar>
             <Button fx:id="run" layoutX="884.0" layoutY="286.0" mnemonicParsing="false" onAction="#handleRunAction" prefHeight="29.0" prefWidth="78.0" text="Procesar" visible="false" />
+            <Button fx:id="index" layoutX="866.0" layoutY="190.0" mnemonicParsing="false" onAction="#handleIndexAction" text="Generar índice" visible="false" />
          </children>
       </Pane>
    </children>

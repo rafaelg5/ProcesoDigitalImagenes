@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,9 +26,13 @@ public class windowController implements Initializable {
     private Button run;
 
     @FXML
+    private Button index;
+
+    @FXML
     private ImageView image;
 
     private FileChooser fileChooser;
+    private PhotoMosaic pm;
 
     @FXML
     private void handleLoadImage(ActionEvent event) throws IOException {
@@ -56,7 +58,16 @@ public class windowController implements Initializable {
             } else {
                 BufferedImage img = ImageIO.read(file);
                 image.setImage(SwingFXUtils.toFXImage(img, null));
-                run.setVisible(true);
+
+                File imageIndex = new File("output/index.idx");
+                if (!imageIndex.exists()) {
+                    run.setVisible(false);
+                    index.setVisible(true);
+                } else if (imageIndex.exists()) {
+                    index.setVisible(false);
+                    run.setVisible(true);
+                }
+                pm = new PhotoMosaic(img);
             }
 
         }
@@ -64,12 +75,20 @@ public class windowController implements Initializable {
 
     @FXML
     private void handleRunAction(ActionEvent event) {
-        BufferedImage img
-                = SwingFXUtils.fromFXImage(image.getImage(), null);
-        PhotoMosaic pm = new PhotoMosaic(img);
         try {
             pm.process();
-        } catch (IOException ex) {}
+        } catch (IOException ex) {
+        }
+    }
+
+    @FXML
+    private void handleIndexAction(ActionEvent event) {
+        try {
+            pm.makeImageIndex();
+        } catch (IOException ex) {
+        }
+        index.setVisible(false);
+        run.setVisible(true);
     }
 
     @FXML
