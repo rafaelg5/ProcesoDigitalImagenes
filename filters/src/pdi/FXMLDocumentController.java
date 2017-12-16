@@ -315,6 +315,16 @@ public class FXMLDocumentController implements Initializable {
         handleFilters(recursiveCF.getText());
     }
 
+    @FXML
+    private void handleDithering(ActionEvent event) {
+        handleFilters("Dithering");
+    }
+    
+    @FXML
+    private void handleSepia(ActionEvent event) {
+        handleFilters("Sepia");
+    }
+
     private void handleFilters(String filterName) {
 
         if (originalImage.getImage() == null) {
@@ -353,7 +363,7 @@ public class FXMLDocumentController implements Initializable {
                 Filter.green(image);
                 break;
             case "Azul":
-                //Filter.blue(image);
+                Filter.blue(image);
                 image = Filter.recursiveColor(image);
                 break;
             case "Aleatorio":
@@ -412,9 +422,7 @@ public class FXMLDocumentController implements Initializable {
                 saveImage.setVisible(false);
                 return;
             case "Marca de Agua":
-                Filter.waterMark(image);                
-                //Image nI = makeHistogram(image);
-                //image = SwingFXUtils.fromFXImage(nI, null);
+                Filter.waterMark(image);
                 break;
             case "Una Letra (Color)": {
                 Pair<String, String> xy = setHTMLLetters();
@@ -500,7 +508,13 @@ public class FXMLDocumentController implements Initializable {
                 image = Filter.recursiveBW(image);
                 break;
             case "Recursivo (Color)":
-                image = Filter.recursiveColor(image);                
+                image = Filter.recursiveColor(image);
+                break;
+            case "Dithering":
+                ErrorDiffusionDithering.dithering(image);
+                break;                
+            case "Sepia":
+                Filter.sepia(image);
                 break;
         }
 
@@ -658,7 +672,6 @@ public class FXMLDocumentController implements Initializable {
         filteredImage.setImage(filtered);
         saveImage.setVisible(true);
     }
-    
 
     /**
      * Determina si una cadena es un número

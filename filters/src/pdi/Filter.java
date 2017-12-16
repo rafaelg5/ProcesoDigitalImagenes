@@ -626,6 +626,28 @@ public class Filter {
 
         return dimg;
     }
+    
+    public static void sepia(BufferedImage img){
+        
+        int width = img.getWidth();
+        int height = img.getHeight();        
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+
+                int r = getImageColor(img, i, j, RED);
+                int g = getImageColor(img, i, j, GREEN);
+                int b = getImageColor(img, i, j, BLUE);
+
+                int tr = fixColor((int)((0.393d * r) + (0.769d * g) + (0.189d * b)));
+                int tg = fixColor((int)((0.349d * r) + (0.686d * g) + (0.168d * b)));
+                int tb = fixColor((int)((0.272d * r) + (0.534d * g) + (0.131d * b)));
+
+                Color newColor = new Color(tr, tg, tb);
+                img.setRGB(i, j, newColor.getRGB());
+            }
+        }
+    }
 
     /**
      * Genera 20 imágenes en escala de grises que varían su tonalidad

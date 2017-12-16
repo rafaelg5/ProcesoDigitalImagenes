@@ -76,6 +76,8 @@
                         <MenuItem fx:id="whiteDominoF" mnemonicParsing="false" onAction="#handleWhiteDomino" text="Dominó (Blanco)" />
                         <MenuItem fx:id="recursiveBWF" mnemonicParsing="false" onAction="#handleRecursiveBW" text="Recursivo (Tonos de Gris)" />
                         <MenuItem fx:id="recursiveCF" mnemonicParsing="false" onAction="#handleRecursiveColor" text="Recursivo (Color)" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSepia" text="Sepia" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleDithering" text="Dithering(Difusión Error)" />
                   </items>
                 </Menu>
               </menus>
